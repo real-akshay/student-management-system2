@@ -6,6 +6,21 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+// Autoloader for classes
+spl_autoload_register(function ($class) {
+    $base_dir = __DIR__ . '/src/';
+    $file = $base_dir . str_replace('\\', '/', $class) . '.php';
+    if (file_exists($file)) {
+        require_once $file;
+    }
+
+    // Also check in Models subdirectory
+    $model_file = __DIR__ . '/src/Models/' . str_replace('\\', '/', $class) . '.php';
+    if (file_exists($model_file)) {
+        require_once $model_file;
+    }
+});
+
 // Load environment variables
 $env_file = __DIR__ . '/.env';
 if (file_exists($env_file)) {
