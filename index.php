@@ -521,7 +521,7 @@ if (isset($conn) && $conn instanceof mysqli) {
         <h6 class="fw-bold mb-3">Contact</h6>
         <div class="muted small">
           <div class="mb-1"><i class="fa fa-envelope me-2 text-primary"></i>hello@bodhivaas.example</div>
-          <div><i class="fa fa-phone me-2 text-primary"></i>+91 99999 99999</div>
+          <div><i class="fa fa-phone me-2 text-primary"></i>+91 97705 99535</div>
         </div>
       </div>
     </div>
