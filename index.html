@@ -1,21 +1,385 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Student Management System</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  </head>
-  <body>
-    <div id="app" style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-      <div class="text-center text-white">
-        <h1 class="mb-4">Student Management System</h1>
-        <p class="lead mb-4">Loading...</p>
-        <a href="index.php" class="btn btn-light btn-lg">Go to Application</a>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bodhivaas — Smart Student ERP</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&family=Poppins:wght@700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --brand:   #6c5ce7;
+      --brand-2: #a29bfe;
+      --brand-3: #fd79a8;
+      --accent:  #00cec9;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      min-height: 100vh;
+      background: #0b0e1a;
+      color: #e2e8f0;
+      overflow-x: hidden;
+    }
+
+    /* ── Animated background ── */
+    .bg-canvas {
+      position: fixed; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 15% 10%,  rgba(108,92,231,0.35) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 85% 90%,  rgba(162,155,254,0.25) 0%, transparent 55%),
+        radial-gradient(ellipse 40% 40% at 50% 50%,  rgba(253,121,168,0.12) 0%, transparent 60%),
+        #0b0e1a;
+    }
+
+    canvas#particles { position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: .5; }
+
+    /* ── Main content ── */
+    .page { position: relative; z-index: 2; min-height: 100vh; display: flex; flex-direction: column; }
+
+    /* ── Navbar ── */
+    nav.topbar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 40px;
+      background: rgba(11,14,26,0.6);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(108,92,231,0.15);
+    }
+    .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+    .brand-logo {
+      width: 40px; height: 40px; border-radius: 11px;
+      background: linear-gradient(135deg, var(--brand), var(--brand-2));
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 900; font-size: 1.15rem; color: #fff;
+      box-shadow: 0 4px 18px rgba(108,92,231,0.5);
+      transition: transform .3s cubic-bezier(.34,1.56,.64,1);
+    }
+    .brand:hover .brand-logo { transform: scale(1.12) rotate(-6deg); }
+    .brand-name { font-weight: 800; font-size: 1.1rem; color: #fff; }
+
+    /* ── Hero ── */
+    .hero {
+      flex: 1;
+      display: flex; align-items: center; justify-content: center;
+      text-align: center;
+      padding: 60px 20px;
+    }
+    .hero-inner { max-width: 720px; }
+
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(108,92,231,0.15);
+      border: 1px solid rgba(108,92,231,0.35);
+      color: var(--brand-2);
+      padding: 6px 18px; border-radius: 999px;
+      font-size: .82rem; font-weight: 700; letter-spacing: .6px;
+      margin-bottom: 24px;
+      animation: fadeDown .6s ease both;
+    }
+
+    h1 {
+      font-size: clamp(2.4rem, 6vw, 3.8rem);
+      font-weight: 900;
+      line-height: 1.12;
+      margin-bottom: 20px;
+      animation: fadeDown .7s .1s ease both;
+    }
+    .grad-text {
+      background: linear-gradient(135deg, var(--brand-2), var(--brand-3));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: rgba(226,232,240,0.65);
+      line-height: 1.7;
+      margin-bottom: 40px;
+      animation: fadeDown .7s .2s ease both;
+    }
+
+    /* ── Buttons ── */
+    .btn-group-hero {
+      display: flex; flex-wrap: wrap; gap: 14px; justify-content: center;
+      margin-bottom: 50px;
+      animation: fadeDown .7s .3s ease both;
+    }
+
+    .btn-primary-hero {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: linear-gradient(135deg, var(--brand), var(--brand-2));
+      color: #fff; border: none;
+      padding: 15px 36px; border-radius: 999px;
+      font-size: 1rem; font-weight: 700;
+      text-decoration: none;
+      box-shadow: 0 8px 28px rgba(108,92,231,0.45);
+      transition: transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .25s ease;
+      cursor: pointer;
+    }
+    .btn-primary-hero:hover {
+      transform: translateY(-4px) scale(1.03);
+      box-shadow: 0 14px 40px rgba(108,92,231,0.55);
+      color: #fff;
+    }
+
+    .btn-ghost-hero {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: rgba(255,255,255,0.07);
+      color: rgba(226,232,240,0.9);
+      border: 1.5px solid rgba(255,255,255,0.18);
+      padding: 14px 32px; border-radius: 999px;
+      font-size: 1rem; font-weight: 600;
+      text-decoration: none;
+      backdrop-filter: blur(10px);
+      transition: transform .25s cubic-bezier(.34,1.56,.64,1), background .2s;
+      cursor: pointer;
+    }
+    .btn-ghost-hero:hover {
+      transform: translateY(-4px);
+      background: rgba(255,255,255,0.12);
+      color: #fff;
+    }
+
+    /* ── Stack cards ── */
+    .stack-row {
+      display: flex; flex-wrap: wrap; gap: 14px; justify-content: center;
+      animation: fadeUp .7s .4s ease both;
+    }
+    .stack-card {
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      padding: 14px 22px;
+      display: flex; align-items: center; gap: 10px;
+      font-size: .88rem; font-weight: 500;
+      transition: transform .3s cubic-bezier(.34,1.56,.64,1), box-shadow .3s;
+    }
+    .stack-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(108,92,231,0.25); }
+    .stack-card i { font-size: 1.1rem; }
+    .stack-card.purple i { color: var(--brand-2); }
+    .stack-card.teal   i { color: var(--accent); }
+    .stack-card.pink   i { color: var(--brand-3); }
+    .stack-card.orange i { color: #fdcb6e; }
+
+    /* ── Info section ── */
+    .info-section {
+      background: rgba(255,255,255,0.025);
+      backdrop-filter: blur(20px);
+      border-top: 1px solid rgba(108,92,231,0.15);
+      padding: 50px 40px;
+      animation: fadeUp .7s .5s ease both;
+    }
+    .info-grid {
+      max-width: 960px; margin: 0 auto;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 28px;
+    }
+    .info-card {
+      background: rgba(108,92,231,0.08);
+      border: 1px solid rgba(108,92,231,0.2);
+      border-radius: 16px; padding: 28px;
+      transition: transform .25s, box-shadow .25s;
+    }
+    .info-card:hover { transform: translateY(-5px); box-shadow: 0 12px 32px rgba(108,92,231,0.2); }
+    .info-icon {
+      width: 48px; height: 48px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem; margin-bottom: 14px;
+    }
+    .info-icon.a { background: linear-gradient(135deg, var(--brand), var(--brand-2)); color: #fff; }
+    .info-icon.b { background: linear-gradient(135deg, #00cec9, #00b894); color: #fff; }
+    .info-icon.c { background: linear-gradient(135deg, #fd79a8, #e84393); color: #fff; }
+    .info-card h5 { font-weight: 700; margin-bottom: 8px; font-size: 1rem; }
+    .info-card p  { font-size: .88rem; color: rgba(226,232,240,0.6); line-height: 1.65; margin: 0; }
+
+    /* ── Notice banner ── */
+    .notice {
+      background: rgba(253,203,110,0.08);
+      border: 1px solid rgba(253,203,110,0.25);
+      border-radius: 12px;
+      padding: 14px 20px;
+      display: flex; align-items: flex-start; gap: 12px;
+      font-size: .85rem;
+      color: rgba(253,203,110,0.9);
+      margin: 0 auto 40px;
+      max-width: 600px;
+      text-align: left;
+      animation: fadeDown .6s .35s ease both;
+    }
+    .notice i { flex-shrink: 0; margin-top: 2px; }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 20px;
+      font-size: .78rem;
+      color: rgba(226,232,240,0.3);
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+
+    /* ── Animations ── */
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 600px) {
+      nav.topbar { padding: 14px 20px; }
+      .info-section { padding: 36px 20px; }
+      h1 { font-size: 2.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="bg-canvas"></div>
+<canvas id="particles"></canvas>
+
+<div class="page">
+
+  <!-- Navbar -->
+  <nav class="topbar">
+    <a href="#" class="brand">
+      <div class="brand-logo">B</div>
+      <span class="brand-name">Bodhivaas</span>
+    </a>
+    <div style="display:flex;gap:10px;align-items:center;">
+      <a href="https://github.com/yourusername/your-repo" target="_blank" rel="noopener"
+         style="color:rgba(226,232,240,0.5);text-decoration:none;font-size:.85rem;display:flex;align-items:center;gap:6px;">
+        <i class="fab fa-github"></i> <span class="d-none d-sm-inline">GitHub</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-inner">
+
+      <div class="eyebrow">
+        <i class="fa fa-graduation-cap"></i>
+        Smart Education ERP Platform
+      </div>
+
+      <h1>
+        Manage your campus<br>
+        <span class="grad-text">smarter, not harder</span>
+      </h1>
+
+      <p class="subtitle">
+        Bodhivaas brings student management, course enrollment,<br>
+        analytics, and notifications together in one elegant dashboard.
+      </p>
+
+      <!-- ⚠️ Notice for GitHub Pages visitors -->
+      <div class="notice">
+        <i class="fa fa-circle-info fa-lg"></i>
+        <div>
+          <strong>GitHub Pages preview.</strong>
+          This is a PHP + MySQL application — it runs on a local server (XAMPP/WAMP).
+          Clone the repo and open <code style="background:rgba(0,0,0,0.3);padding:1px 6px;border-radius:4px;">http://localhost/project/</code> to use the full app.
+        </div>
+      </div>
+
+      <div class="btn-group-hero">
+        <!-- Points to localhost where PHP actually runs -->
+        <a href="http://localhost/project/index.php" class="btn-primary-hero" id="goToApp">
+          <i class="fa fa-rocket"></i>
+          Go to Application
+        </a>
+        <a href="https://github.com/yourusername/your-repo#readme" target="_blank" rel="noopener" class="btn-ghost-hero">
+          <i class="fab fa-github"></i>
+          View on GitHub
+        </a>
+      </div>
+
+      <div class="stack-row">
+        <div class="stack-card purple"><i class="fa fa-users"></i> Student Management</div>
+        <div class="stack-card teal">  <i class="fa fa-book-open"></i> Course Enrollment</div>
+        <div class="stack-card pink">  <i class="fa fa-chart-line"></i> Analytics</div>
+        <div class="stack-card orange"><i class="fa fa-bell"></i> Notifications</div>
       </div>
     </div>
-    <script>
-      window.location.href = 'index.php';
-    </script>
-  </body>
+  </section>
+
+  <!-- Info cards -->
+  <section class="info-section">
+    <div class="info-grid">
+      <div class="info-card">
+        <div class="info-icon a"><i class="fa fa-server"></i></div>
+        <h5>Local Setup</h5>
+        <p>Requires PHP 8+ and MySQL. Install XAMPP, import the SQL schema from <code>supabase/migrations/</code>, then visit <code>localhost/project/</code>.</p>
+      </div>
+      <div class="info-card">
+        <div class="info-icon b"><i class="fa fa-shield-halved"></i></div>
+        <h5>Admin Demo</h5>
+        <p>Username: <strong>admin</strong> &nbsp;·&nbsp; Password: <strong>admin123</strong><br>
+        Access the full admin dashboard with student &amp; course CRUD.</p>
+      </div>
+      <div class="info-card">
+        <div class="info-icon c"><i class="fa fa-person-chalkboard"></i></div>
+        <h5>Student Demo</h5>
+        <p>Email: <strong>rahul.sharma@student.com</strong><br>Password: <strong>student123</strong><br>
+        View enrolled courses, announcements, and profile.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    &copy; <span id="yr"></span> Bodhivaas &nbsp;·&nbsp; PHP + MySQL Student ERP &nbsp;·&nbsp;
+    <i class="fa fa-phone" style="color:var(--brand-2);"></i> +91 97705 99535
+  </footer>
+
+</div><!-- /page -->
+
+<script>
+  // Year
+  document.getElementById('yr').textContent = new Date().getFullYear();
+
+  // Particle canvas
+  (function () {
+    const cvs = document.getElementById('particles');
+    const ctx = cvs.getContext('2d');
+    let W, H, pts = [];
+    const COLORS = ['rgba(108,92,231,', 'rgba(162,155,254,', 'rgba(253,121,168,', 'rgba(0,206,201,'];
+
+    function resize() { W = cvs.width = innerWidth; H = cvs.height = innerHeight; }
+    addEventListener('resize', resize); resize();
+
+    for (let i = 0; i < 60; i++) {
+      pts.push({
+        x: Math.random() * W, y: Math.random() * H,
+        r: Math.random() * 3 + 1.2,
+        dx: (Math.random() - .5) * .4, dy: (Math.random() - .5) * .4,
+        a: Math.random() * .4 + .1,
+        c: COLORS[Math.floor(Math.random() * COLORS.length)]
+      });
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+      pts.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = p.c + p.a + ')';
+        ctx.fill();
+        p.x += p.dx; p.y += p.dy;
+        if (p.x < -10) p.x = W + 10;
+        if (p.x > W + 10) p.x = -10;
+        if (p.y < -10) p.y = H + 10;
+        if (p.y > H + 10) p.y = -10;
+      });
+      requestAnimationFrame(draw);
+    }
+    draw();
+  })();
+</script>
+</body>
 </html>
